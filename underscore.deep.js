@@ -1,6 +1,6 @@
-    // Underscore.deep (underscore.deep.js 1.0.0)
+    // Underscore-deep (underscore.deep.js 1.0.0)
     // (c) 2015 Andrew Henderson
-    // Underscore.deep may be freely distributed under the MIT license.
+    // Underscore-deep may be freely distributed under the MIT license.
 
     (function() {
 
@@ -27,8 +27,65 @@
           return _.isEqual(_obj1, _obj2);
         },
 
-        // Recursively looks through each value in the list, returning an array
-        // of all the objects that contain all of the key-value pairs listed in properties.
+        deepFind: function(obj, predicate, context) {
+          var result;
+          predicate = _.iteratee(predicate, context);
+
+          if (predicate(obj)) {
+            return obj;
+          }
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+              if (_.isArray(obj[i])) {
+                _.each(obj[i], function(_obj) {
+                  if (result) {
+                    return;
+                  }
+                  result = _.deepFind(_obj, predicate);
+                });
+              } else if (_.isObject(obj[i])) {
+                result = _.deepFind(obj[i], predicate);
+              }
+              if (result) {
+                return result;
+              }
+            }
+          }
+        },
+
+        deepFilter: function(obj, predicate, context) {
+          var results = [];
+          predicate = _.iteratee(predicate, context);
+
+          if (predicate(obj)) {
+            results.push(obj);
+          }
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+              if (_.isArray(obj[i])) {
+                _.each(obj[i], function(_obj) {
+                  var result = _.deepFilter(_obj, predicate);
+                  if (result) {
+                    results.push(result);
+                  }
+                });
+              } else if (_.isObject(obj[i])) {
+                var result = _.deepFilter(obj[i], predicate);
+                if (result) {
+                  results.push(result);
+                }
+              }
+            }
+          }
+          if (results.length) {
+            return _.flatten(results, 'shallow');
+          }
+        },
+
+        // Recursively looks through each value in the `obj`, returning an array
+        // of all the objects that contain all of the key-value pairs listed in `attrs`.
         deepWhere: function(obj, attrs) {
           var results = [];
 
@@ -58,8 +115,8 @@
           }
         },
 
-        // Recursively looks through the list and returns the first value
-        // that matches all of the key-value pairs listed in properties.
+        // Recursively looks through the `obj` and returns the first value
+        // that matches all of the key-value pairs listed in `attrs`.
         deepFindWhere: function(obj, attrs) {
           var result;
 
