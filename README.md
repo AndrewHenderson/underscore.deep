@@ -1,6 +1,11 @@
 # underscore.deep
 Powerful extensions for Underscore.js which allow you to quickly locate any object that contains all of the key-value pairs listed in properties. The recursive depth-first traversal looks inside arrays as well objects.
-#### Example Usage
+
+#### deepWhere
+
+**Signature:** `_.deepWhere(collection:Array|Object, properties:Object)`
+
+Recursively looks through each value in the `collection`, returning an array of all the objects that contain all of the key-value pairs listed in `properties`.
 
 Let's say your data looks something like this:
 
