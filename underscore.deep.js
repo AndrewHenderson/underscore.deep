@@ -33,7 +33,7 @@
           var results = [];
 
           if (_.hasEqual(obj, attrs)) {
-            return obj;
+            results.push(obj);
           }
 
           for (var i in obj) {
