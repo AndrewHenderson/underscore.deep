@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Underscore Extensions</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/styles/shCore.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/styles/shThemeRDark.min.css"/>
+</head>
+<body class="container">
+  <h2>_.deepFindWhere(familyTree, <span id="deepFindWhereParam"></span>);</h2>
+  <pre class="brush: js" id="deepFindWhereResult"></pre>
+  <h2>_.deepWhere(familyTree, <span id="deepWhereParam"></span>);</h2>
+  <h3>length: <span id="deepWhereLength"></span></h3>
+  <pre class="brush: js" id="deepWhereResult"></pre>
+  <h2>_.deepFilter(familyTree, <span id="deepFilterParam"></span>);</h2>
+  <h3>length: <span id="deepFilterLength"></span></h3>
+  <pre class="brush: js" id="deepFilterResult"></pre>
+  <h2>_.deepFind(familyTree, <span id="deepFindParam"></span>);</h2>
+  <pre class="brush: js" id="deepFindResult"></pre>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shCore.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shBrushJScript.min.js"></script>
+  <script>
+    var familyTree = {
+      name: "Charles",
+      age: "deceased",
+      children: [
+        {
+          name: "Joseph",
+          age: "deceased",
+          children: []
+        },
+        {
+          name: "Christine",
+          age: 73,
+          children: [
+            {
+              name: "Christopher",
+              age: 45,
+              children: []
+            },
+            {
+              name: "Craig",
+              age: 41,
+              children: [
+                {
+                  name: "Luca",
+                  age: 13,
+                  children: []
+                },
+                {
+                  name: "Christine",
+                  age: 9,
+                  children: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Robert",
+          age: 71,
+          children: [
+            {
+              name: "Jennifer",
+              age: 46,
+              children: [
+                {
+                  name: "Isabella",
+                  age: 17,
+                  children: []
+                },
+                {
+                  name: "Nicholas",
+                  age: 13,
+                  children: []
+                }
+              ]
+            },
+            {
+              name: "Erin",
+              age: 43,
+              children: [
+                {
+                  name: "Eve",
+                  age: 8,
+                  children: []
+                },
+                {
+                  name: "Rowan",
+                  age: 6,
+                  children: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "Rosemary",
+          age: 69,
+          children: [
+            {
+              name: "Andrew",
+              age: 31,
+              children: []
+            }
+          ]
+        },
+        {
+          name: "Nancy",
+          age: 67,
+          children: []
+        },
+        {
+          name: "Michael",
+          age: 65,
+          children: [
+            {
+              name: "Nicole",
+              age: 32,
+              children: []
+            },
+            {
+              name: "Emily",
+              age: 28,
+              children: []
+            }
+          ]
+        }
+      ]
+    };
+  </script>
+  <script>
+    // Underscore-deep (underscore.deep.js 1.0.0)
+    // (c) 2015 Andrew Henderson
+    // Underscore-deep may be freely distributed under the MIT license.
+
+    (function() {
+
+      // Baseline setup
+      // --------------
+
+      // Establish the root object, `window` in the browser, or `require` it on the server.
+      if (typeof exports === 'object') {
+        _ = module.exports = require('underscore');
+      }
+
+      // Mixing in the deep methods along with "hasEqual"
+      // ------------------------------------------------
+
+      _.mixin({
+
+        // Compares two objects to see if all key/value pairs are equal.
+        hasEqual: function(obj1, obj2, keys) {
+          if (_.isUndefined(keys)) {
+            keys = _.keys(obj2);
+          }
+          var _obj1 = _.pick(obj1, keys);
+          var _obj2 = _.pick(obj2, keys);
+          return _.isEqual(_obj1, _obj2);
+        },
+
+        deepFind: function(obj, predicate, context) {
+          var result;
+          predicate = _.iteratee(predicate, context);
+
+          if (predicate(obj)) {
+            return obj;
+          }
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+              if (_.isArray(obj[i])) {
+                _.each(obj[i], function(_obj) {
+                  if (result) {
+                    return;
+                  }
+                  result = _.deepFind(_obj, predicate);
+                });
+              } else if (_.isObject(obj[i])) {
+                result = _.deepFind(obj[i], predicate);
+              }
+              if (result) {
+                return result;
+              }
+            }
+          }
+        },
+
+        deepFilter: function(obj, predicate, context) {
+          var results = [];
+          predicate = _.iteratee(predicate, context);
+
+          if (predicate(obj)) {
+            results.push(obj);
+          }
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+              if (_.isArray(obj[i])) {
+                _.each(obj[i], function(_obj) {
+                  var result = _.deepFilter(_obj, predicate);
+                  if (result) {
+                    results.push(result);
+                  }
+                });
+              } else if (_.isObject(obj[i])) {
+                var result = _.deepFilter(obj[i], predicate);
+                if (result) {
+                  results.push(result);
+                }
+              }
+            }
+          }
+          if (results.length) {
+            return _.flatten(results, 'shallow');
+          }
+        },
+
+        // Recursively looks through each value in the `obj`, returning an array
+        // of all the objects that contain all of the key-value pairs listed in `attrs`.
+        deepWhere: function(obj, attrs) {
+          var results = [];
+
+          if (_.hasEqual(obj, attrs)) {
+            results.push(obj);
+          }
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+              if (_.isArray(obj[i])) {
+                _.each(obj[i], function(_obj) {
+                  var result = _.deepWhere(_obj, attrs);
+                  if (result) {
+                    results.push(result);
+                  }
+                });
+              } else if (_.isObject(obj[i])) {
+                var result = _.deepWhere(obj[i], attrs);
+                if (result) {
+                  results.push(result);
+                }
+              }
+            }
+          }
+          if (results.length) {
+            return _.flatten(results, 'shallow');
+          }
+        },
+
+        // Recursively looks through the `obj` and returns the first value
+        // that matches all of the key-value pairs listed in `attrs`.
+        deepFindWhere: function(obj, attrs) {
+          var result;
+
+          if (_.hasEqual(obj, attrs)) {
+            return obj;
+          }
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i)) {
+              if (_.isArray(obj[i])) {
+                _.each(obj[i], function(_obj) {
+                  if (result) {
+                    return;
+                  }
+                  result = _.deepFindWhere(_obj, attrs);
+                });
+              } else if (_.isObject(obj[i])) {
+                result = _.deepFindWhere(obj[i], attrs);
+              }
+              if (result) {
+                return result;
+              }
+            }
+          }
+        }
+      });
+
+    }).call(this);
+  </script>
+  <script>
+    $(function() {
+      var deepFindWhereParam = { age: 46 };
+      var deepFindWhereResult = _.deepFindWhere(familyTree, deepFindWhereParam);
+
+      var deepWhereParam = { children: [] };
+      var deepWhereResult = _.deepWhere(familyTree, deepWhereParam);
+
+      var deepFilterParam = function(obj) {
+        return obj.children.length > 1;
+      };
+      var deepFilterResult = _.deepFilter(familyTree, deepFilterParam);
+
+      var deepFindParam = function(obj) {
+        return obj.age > 13 && obj.age < 31;
+      };
+      var deepFindResult = _.deepFind(familyTree, deepFindParam);
+
+      $('#deepFindWhereParam').text(JSON.stringify(deepFindWhereParam));
+      $('#deepFindWhereResult').text(JSON.stringify(deepFindWhereResult, null, 2));
+
+      $('#deepWhereParam').text(JSON.stringify(deepWhereParam));
+      $('#deepWhereResult').text(JSON.stringify(deepWhereResult, null, 2));
+      $('#deepWhereLength').text(deepWhereResult ? deepWhereResult.length : 0);
+
+      $('#deepFilterParam').text(deepFilterParam.toString());
+      $('#deepFilterResult').text(JSON.stringify(deepFilterResult, null, 2));
+      $('#deepFilterLength').text(deepFilterResult ? deepFilterResult.length : 0);
+
+      $('#deepFindParam').text(deepFindParam.toString());
+      $('#deepFindResult').text(JSON.stringify(deepFindResult, null, 2));
+
+      SyntaxHighlighter.all()
+    });
+  </script>
+</body>
+</html>
