@@ -121,7 +121,7 @@ var familyTree = {
 
 **Signature:** `_.deepFindWhere(collection:Array|Object, properties:Object)`
 
-Recursively looks through each value in the `collection`, returning an athe first object that contains all of the key-value pairs listed in `properties`.
+Recursively looks through each value in the `collection`, returning the first object that contains all of the key-value pairs listed in `properties`.
 
 And you want to see the child age 46.
 ```js
@@ -256,7 +256,7 @@ Interestingly, the array contains both the parent the child by the same name!
 
 Recursively looks through each value in the `collection`, returning an array of all the objects that pass a truth test (`predicate`).
 
-Now you'd like to see all children with 1 child.
+Now you'd like to see all children with one child.
 ```js
 _.deepFilter(familyTree, function (obj) {
   return obj.children && obj.children.length == 1;
