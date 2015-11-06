@@ -1,6 +1,9 @@
 # underscore.deep
 Powerful extensions for [Underscore.js](https://github.com/jashkenas/underscore) which allow for depth-first tree traversal across objects and arrays.
 
+## How is this different from other tree traversal?
+Most other libraries work only with a strict structure of nested objects, ignoring any nested arrays. These functions look within those arrays as well.
+
 Let's say your data looks something like this:
 
 ```js
