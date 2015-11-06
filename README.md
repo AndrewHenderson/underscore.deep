@@ -1,5 +1,5 @@
 # underscore.deep
-Powerful extensions for Underscore.js which allow you to quickly locate any object that contains all of the key-value pairs listed in properties. The recursive depth-first traversal looks inside arrays as well objects.
+Powerful extensions for Underscore.js which allow for depth-first tree traversal across objects and arrays.
 
 Let's say your data looks something like this:
 
@@ -287,7 +287,7 @@ _.deepFind(familyTree, function (obj) {
   return _.isNumber(obj.age) && obj.age > 13 && obj.age < 30;
 });
 ```
-Result: 1
+Result:
 ```js
 {
   "name": "Isabella",
