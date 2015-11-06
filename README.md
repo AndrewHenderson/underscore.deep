@@ -1,5 +1,5 @@
 # underscore.deep
-Powerful extensions for Underscore.js which allow for depth-first tree traversal across objects and arrays.
+Powerful extensions for [Underscore.js](https://github.com/jashkenas/underscore) which allow for depth-first tree traversal across objects and arrays.
 
 Let's say your data looks something like this:
 
