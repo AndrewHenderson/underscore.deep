@@ -46,8 +46,12 @@
               }
               result = _.deepFind(_obj, predicate);
             });
-          } else {
+          } else if (_.isObject(obj[i])) {
             result = _.deepFind(obj[i], predicate);
+          } else {
+            if (predicate(obj[i])) {
+              result = obj[i];
+            }
           }
           if (result) {
             return result;

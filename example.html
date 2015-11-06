@@ -182,8 +182,12 @@
                 }
                 result = _.deepFind(_obj, predicate);
               });
-            } else {
+            } else if (_.isObject(obj[i])) {
               result = _.deepFind(obj[i], predicate);
+            } else {
+              if (predicate(obj[i])) {
+                result = obj[i];
+              }
             }
             if (result) {
               return result;
@@ -302,11 +306,9 @@
     var deepFilterResult = _.deepFilter(familyTree, deepFilterPredicate);
 
     var deepFindPredicate = function (obj) {
-      return obj.sub && _.isEqual(obj.sub, [7,8,9,10]);
+      return _.isNumber(obj.age) && obj.age > 13 && obj.age < 30;
     };
-    var deepFindResult = _.deepFind([1,2,3,{
-      sub: [7,8,9,10]
-    },5,6], deepFindPredicate);
+    var deepFindResult = _.deepFind(familyTree, deepFindPredicate);
 
     $('#deepFindWhereParam').text(JSON.stringify(deepFindWhereParam));
     $('#deepFindWhereResult').text(JSON.stringify(deepFindWhereResult, null, 2));
