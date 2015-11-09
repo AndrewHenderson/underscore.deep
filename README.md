@@ -1,6 +1,9 @@
 # underscore.deep
 Powerful extensions for [Underscore.js](https://github.com/jashkenas/underscore) which allow for depth-first tree traversal across objects and arrays.
 
+## How is this different from other tree traversal?
+Most other libraries work only with a strict structure of nested objects, ignoring any nested arrays. These functions look within those arrays as well to a depth of n.
+
 Let's say your data looks something like this:
 
 ```js
@@ -118,7 +121,7 @@ var familyTree = {
 
 **Signature:** `_.deepFindWhere(collection:Array|Object, properties:Object)`
 
-Recursively looks through each value in the `collection`, returning an athe first object that contains all of the key-value pairs listed in `properties`.
+Recursively looks through each value in the `collection`, returning the first object that contains all of the key-value pairs listed in `properties`.
 
 And you want to see the child age 46.
 ```js
@@ -253,7 +256,7 @@ Interestingly, the array contains both the parent the child by the same name!
 
 Recursively looks through each value in the `collection`, returning an array of all the objects that pass a truth test (`predicate`).
 
-Now you'd like to see all children with 1 child.
+Now you'd like to see all children with one child.
 ```js
 _.deepFilter(familyTree, function (obj) {
   return obj.children && obj.children.length == 1;
