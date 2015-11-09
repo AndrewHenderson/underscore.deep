@@ -153,6 +153,65 @@
           }
         }
       }
+    },
+
+    deepHasEqual: function(a, b, keys) {
+      var result;
+
+      if (_.isUndefined(keys)) {
+        keys = _.keys(b);
+      }
+      a = _.pick(a, keys);
+      b = _.pick(b, keys);
+
+      if ( _.hasEqual(a, b, keys)) {
+        return true;
+      }
+
+      for (var i in a) {
+        if (a.hasOwnProperty(i)) {
+          if (_.isArray(a[i])) {
+            _.each(a[i], function(obj) {
+              if(result){
+                return;
+              }
+              result = _.deepHasEqual(obj, b, keys);
+            });
+          } else if (_.isObject(a[i])) {
+            result = _.deepHasEqual(a[i], b, keys);
+          }
+        }
+      }
+      return !!result;
+    },
+
+    deepSearch: function(obj, values) {
+      var results = [];
+
+      if(_.contains(_.values(obj), values)) {
+        results.push(obj);
+      }
+
+      for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          if (_.isArray(obj[i])) {
+            _.each(obj[i], function(_obj) {
+              var result = _.deepSearch(_obj, values);
+              if (result) {
+                results.push(result);
+              }
+            });
+          } else if (_.isObject(obj[i])) {
+            var result = _.deepSearch(obj[i], values);
+            if (result) {
+              results.push(result);
+            }
+          }
+        }
+      }
+      if (results.length) {
+        return _.flatten(results, true);
+      }
     }
   });
 
