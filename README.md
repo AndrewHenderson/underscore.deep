@@ -309,7 +309,7 @@ Now you'd like to see all children aged 13.
 _.deepSearch(familyTree, [13]);
 ```
 Result: 2
-```
+```js
 [
   {
     "name": "Luca",
