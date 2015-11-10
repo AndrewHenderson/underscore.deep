@@ -185,32 +185,22 @@
       return !!result;
     },
 
-    deepSearch: function(obj, values) {
+    deepSearch: function(collection, values) {
       var results = [];
-
-      if(_.contains(_.values(obj), values)) {
-        results.push(obj);
-      }
-
-      for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          if (_.isArray(obj[i])) {
-            _.each(obj[i], function(_obj) {
-              var result = _.deepSearch(_obj, values);
-              if (result) {
-                results.push(result);
-              }
-            });
-          } else if (_.isObject(obj[i])) {
-            var result = _.deepSearch(obj[i], values);
-            if (result) {
-              results.push(result);
-            }
+      _.deepFilter(collection, function(obj) {
+        var status = true;
+        for(var i in values) {
+          if (!status) {
+            return;
           }
+          status = _.contains(obj, values[i]);
         }
-      }
+        if(status) {
+          results.push(obj);
+        }
+      });
       if (results.length) {
-        return _.flatten(results, true);
+        return results;
       }
     }
   });

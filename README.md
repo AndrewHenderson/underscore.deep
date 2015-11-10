@@ -298,3 +298,28 @@ Result:
   "children": []
 }
 ```
+#### deepSearch
+
+**Signature:** `_.deepWhere(collection:Array|Object, values:Array)`
+
+Recursively looks through each value in the `collection`, returning an array of all the objects that contain all of the `values`.
+
+Now you'd like to see all children aged 13.
+```js
+_.deepSearch(familyTree, [13]);
+```
+Result: 2
+```
+[
+  {
+    "name": "Luca",
+    "age": 13,
+    "children": []
+  },
+  {
+    "name": "Nicholas",
+    "age": 13,
+    "children": []
+  }
+]
+```
