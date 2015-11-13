@@ -1,7 +1,7 @@
 $(function () {
 
   // deepFind
-  var deepFindParam = {age: 17};
+  var deepFindParam = {age: 46};
   var deepFindResult = _.deepFind(familyTree, deepFindParam);
   $('#deepFindParam').text(JSON.stringify(deepFindParam));
   $('#deepFindResult').text(JSON.stringify(deepFindResult, null, 2));

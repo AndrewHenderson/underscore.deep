@@ -124,7 +124,7 @@ var familyTree = {
 Recursively looks through each value in the `collection`, returning the first object that passes a truth test - `predicate`.
 *Note: `predicate` can also be a properties object.*
 
-And you'd like to see all children between the ages of 13 and 30.
+You'd like to see all children between the ages of 13 and 30.
 
 ```js
 _.deepFind(familyTree, function (obj) {
@@ -296,7 +296,7 @@ Result: 1
 
 Recursively looks through each value in the `collection`, returning an array of all the objects that contain all of the `values`.
 
-Now you'd like to see all children aged 13.
+Now you'd like to see all objects that contain both "Nicholas" and 13.
 ```js
 _.deepSearch(familyTree, ['Nicholas', 13]);
 ```
