@@ -294,7 +294,7 @@ Result: 1
 ```
 #### deepSearch
 
-**Signature:** `_.deepWhere(collection:Array|Object, values:Array)`
+**Signature:** `_.deepSearch(collection:Array|Object, values:Array)`
 
 Recursively looks through each value in the `collection`, returning an array of all the objects that contain all of the `values`.
 
