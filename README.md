@@ -117,15 +117,32 @@ var familyTree = {
 };
 
 ```
-#### deepFindWhere
+#### deepFind
 
-**Signature:** `_.deepFindWhere(collection:Array|Object, properties:Object)`
+**Signature:** `_.deepFind(collection:Array|Object, predicate:Function|Object)`
 
-Recursively looks through each value in the `collection`, returning the first object that contains all of the key-value pairs listed in `properties`.
+Recursively looks through each value in the `collection`, returning the first object that passes a truth test - `predicate`.
+*Note: `predicate` can also be a properties object.*
 
-And you want to see the child age 46.
+And you'd like to see all children between the ages of 13 and 30.
+
 ```js
-_.deepFindWhere(familyTree, {"age":46});
+_.deepFind(familyTree, function (obj) {
+  return _.isNumber(obj.age) && obj.age > 13 && obj.age < 30;
+});
+```
+Result:
+```js
+{
+  "name": "Isabella",
+  "age": 17,
+  "children": []
+}
+```
+
+Now you want to see the child age 46.
+```js
+_.deepFind(familyTree, {"age":46});
 ```
 Result:
 ```js
@@ -146,15 +163,16 @@ Result:
   ]
 }
 ```
-#### deepWhere
+#### deepFilter
 
-**Signature:** `_.deepWhere(collection:Array|Object, properties:Object)`
+**Signature:** `_.deepFilter(collection:Array|Object, predicate:Function|Object)`
 
-Recursively looks through each value in the `collection`, returning an array of all the objects that contain all of the key-value pairs listed in `properties`.
+Recursively looks through each value in the `collection`, returning an array of all the objects that pass a truth test (`predicate`).
+*Note: `predicate` can also be a properties object.*
 
 Now you want to see all children with an empty children array.
 ```js
-_.deepWhere(familyTree, {
+_.deepFilter(familyTree, {
   children: []
 });
 ```
@@ -213,7 +231,7 @@ Result: 12
 ```
 Now you'd like to see all children with the name "Christine":
 ```js
-_.deepWhere(familyTree, {
+_.deepFilter(familyTree, {
   name: "Christine"
 });
 ```
@@ -250,12 +268,6 @@ Result: 2
 ```
 Interestingly, the array contains both the parent the child by the same name!
 
-#### deepFilter
-
-**Signature:** `_.deepWhere(collection:Array|Object, predicate:Function)`
-
-Recursively looks through each value in the `collection`, returning an array of all the objects that pass a truth test (`predicate`).
-
 Now you'd like to see all children with one child.
 ```js
 _.deepFilter(familyTree, function (obj) {
@@ -278,26 +290,6 @@ Result: 1
   }
 ]
 ```
-#### deepFind
-
-**Signature:** `_.deepWhere(collection:Array|Object, predicate:Function)`
-
-Recursively looks through each value in the `collection`, returning the first object that passes a truth test (`predicate`).
-
-Now you'd like to see all children between the ages of 13 and 30.
-```js
-_.deepFind(familyTree, function (obj) {
-  return _.isNumber(obj.age) && obj.age > 13 && obj.age < 30;
-});
-```
-Result:
-```js
-{
-  "name": "Isabella",
-  "age": 17,
-  "children": []
-}
-```
 #### deepSearch
 
 **Signature:** `_.deepWhere(collection:Array|Object, values:Array)`
@@ -306,16 +298,11 @@ Recursively looks through each value in the `collection`, returning an array of 
 
 Now you'd like to see all children aged 13.
 ```js
-_.deepSearch(familyTree, [13]);
+_.deepSearch(familyTree, ['Nicholas', 13]);
 ```
-Result: 2
+Result: 1
 ```js
 [
-  {
-    "name": "Luca",
-    "age": 13,
-    "children": []
-  },
   {
     "name": "Nicholas",
     "age": 13,

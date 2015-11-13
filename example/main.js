@@ -1,38 +1,38 @@
 $(function () {
 
-  // deepFindWhere
-  var deepFindWhereParam = {age: 46};
-  var deepFindWhereResult = _.deepFindWhere(familyTree, deepFindWhereParam);
-  $('#deepFindWhereParam').text(JSON.stringify(deepFindWhereParam));
-  $('#deepFindWhereResult').text(JSON.stringify(deepFindWhereResult, null, 2));
+  // deepFind
+  var deepFindParam = {age: 17};
+  var deepFindResult = _.deepFind(familyTree, deepFindParam);
+  $('#deepFindParam').text(JSON.stringify(deepFindParam));
+  $('#deepFindResult').text(JSON.stringify(deepFindResult, null, 2));
 
-  // deepWhere
-  var deepWhereParam = {children: []};
-  var deepWhereResult = _.deepWhere(familyTree, deepWhereParam);
-  $('#deepWhereParam').text(JSON.stringify(deepWhereParam));
-  $('#deepWhereResult').text(JSON.stringify(deepWhereResult, null, 2));
-  $('#deepWhereLength').text(deepWhereResult ? deepWhereResult.length : 0);
+  var deepFind2Predicate = function (obj) {
+    return _.isNumber(obj.age) && obj.age > 13 && obj.age < 30;
+  };
+  var deepFind2Result = _.deepFind(familyTree, deepFind2Predicate);
+
+  $('#deepFind2Param').text(deepFind2Predicate.toString());
+  $('#deepFind2Result').text(JSON.stringify(deepFind2Result, null, 2));
 
   // deepFilter
-  var deepFilterPredicate = function (obj) {
-    return obj.children && obj.children.length == 1;
-  };
-  var deepFilterResult = _.deepFilter(familyTree, deepFilterPredicate);
-  $('#deepFilterParam').text(deepFilterPredicate.toString());
+  var deepFilterParam = {age: 9};
+  var deepFilterResult = _.deepFilter(familyTree, deepFilterParam);
+  $('#deepFilterParam').text(JSON.stringify(deepFilterParam));
   $('#deepFilterResult').text(JSON.stringify(deepFilterResult, null, 2));
   $('#deepFilterLength').text(deepFilterResult ? deepFilterResult.length : 0);
 
-  // deepFind
-  var deepFindPredicate = function (obj) {
-    return _.isNumber(obj.age) && obj.age > 13 && obj.age < 30;
+  // deepFilter2
+  var deepFilter2Predicate = function (obj) {
+    return obj.children && obj.children.length == 1;
   };
-  var deepFindResult = _.deepFind(familyTree, deepFindPredicate);
+  var deepFilter2Result = _.deepFilter(familyTree, deepFilter2Predicate);
+  $('#deepFilter2Param').text(deepFilter2Predicate.toString());
+  $('#deepFilter2Result').text(JSON.stringify(deepFilter2Result, null, 2));
+  $('#deepFilter2Length').text(deepFilter2Result ? deepFilter2Result.length : 0);
 
-  $('#deepFindParam').text(deepFindPredicate.toString());
-  $('#deepFindResult').text(JSON.stringify(deepFindResult, null, 2));
 
   // deepSearch
-  var deepSearchParam = [13];
+  var deepSearchParam = ['Nicholas', 13];
   var deepSearchResult = _.deepSearch(familyTree, deepSearchParam);
   $('#deepSearchParam').text(JSON.stringify(deepSearchParam));
   $('#deepSearchResult').text(JSON.stringify(deepSearchResult, null, 2));

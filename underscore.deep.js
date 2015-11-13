@@ -31,26 +31,30 @@
     // Return the first value which passes a truth test at any depth of the collection.
     deepFind: function(obj, predicate, context) {
       var result;
-      predicate = _.iteratee(predicate, context);
 
-      if (predicate(obj)) {
+      if (_.isFunction(predicate)) {
+        predicate = _.iteratee(predicate, context);
+        if (predicate(obj)) {
+          return obj;
+        }
+      } else if (_.hasEqual(obj, predicate)) {
         return obj;
       }
 
-      for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          if (_.isArray(obj[i])) {
-            _.each(obj[i], function(_obj) {
+      for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          if (_.isArray(obj[prop])) {
+            _.each(obj[prop], function(_obj) {
               if (result) {
                 return;
               }
               result = _.deepFind(_obj, predicate);
             });
-          } else if (_.isObject(obj[i])) {
-            result = _.deepFind(obj[i], predicate);
+          } else if (_.isObject(obj[prop])) {
+            result = _.deepFind(obj[prop], predicate);
           } else {
-            if (predicate(obj[i])) {
-              result = obj[i];
+            if (_.isFunction(predicate) && predicate(obj[prop])) {
+              result = obj[prop];
             }
           }
           if (result) {
@@ -64,29 +68,32 @@
     // Return all the elements that pass a truth test at any depth of the collection.
     deepFilter: function(obj, predicate, context) {
       var results = [];
-      predicate = _.iteratee(predicate, context);
-
-      if (predicate(obj)) {
+      if (_.isFunction(predicate)) {
+        predicate = _.iteratee(predicate, context);
+        if (predicate(obj)) {
+          results.push(obj);
+        }
+      } else if (_.hasEqual(obj, predicate)) {
         results.push(obj);
       }
 
-      for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          if (_.isArray(obj[i])) {
-            _.each(obj[i], function(_obj) {
+      for (var prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+          if (_.isArray(obj[prop])) {
+            _.each(obj[prop], function(_obj) {
               var result = _.deepFilter(_obj, predicate);
               if (result) {
                 results.push(result);
               }
             });
-          } else if (_.isObject(obj[i])) {
-            var result = _.deepFilter(obj[i], predicate);
+          } else if (_.isObject(obj[prop])) {
+            var result = _.deepFilter(obj[prop], predicate);
             if (result) {
               results.push(result);
             }
           } else {
-            if (predicate(obj[i])) {
-              results.push(obj[i]);
+            if (_.isFunction(predicate) && predicate(obj[prop])) {
+              results.push(obj[prop]);
             }
           }
         }
@@ -94,95 +101,6 @@
       if (results.length) {
         return _.flatten(results, true);
       }
-    },
-
-    // Recursive version of `where`: selecting only objects
-    // containing specific `key:value` pairs at any depth of the collection.
-    deepWhere: function(obj, attrs) {
-      var results = [];
-
-      if (_.hasEqual(obj, attrs)) {
-        results.push(obj);
-      }
-
-      for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          if (_.isArray(obj[i])) {
-            _.each(obj[i], function(_obj) {
-              var result = _.deepWhere(_obj, attrs);
-              if (result) {
-                results.push(result);
-              }
-            });
-          } else if (_.isObject(obj[i])) {
-            var result = _.deepWhere(obj[i], attrs);
-            if (result) {
-              results.push(result);
-            }
-          }
-        }
-      }
-      if (results.length) {
-        return _.flatten(results, true);
-      }
-    },
-
-    // Recursive version of `findWhere`: getting the first object
-    // containing specific `key:value` pairs at any depth of the collection.
-    deepFindWhere: function(obj, attrs) {
-      var result;
-
-      if (_.hasEqual(obj, attrs)) {
-        return obj;
-      }
-
-      for (var i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          if (_.isArray(obj[i])) {
-            _.each(obj[i], function(_obj) {
-              if (result) {
-                return;
-              }
-              result = _.deepFindWhere(_obj, attrs);
-            });
-          } else if (_.isObject(obj[i])) {
-            result = _.deepFindWhere(obj[i], attrs);
-          }
-          if (result) {
-            return result;
-          }
-        }
-      }
-    },
-
-    deepHasEqual: function(a, b, keys) {
-      var result;
-
-      if (_.isUndefined(keys)) {
-        keys = _.keys(b);
-      }
-      a = _.pick(a, keys);
-      b = _.pick(b, keys);
-
-      if ( _.hasEqual(a, b, keys)) {
-        return true;
-      }
-
-      for (var i in a) {
-        if (a.hasOwnProperty(i)) {
-          if (_.isArray(a[i])) {
-            _.each(a[i], function(obj) {
-              if(result){
-                return;
-              }
-              result = _.deepHasEqual(obj, b, keys);
-            });
-          } else if (_.isObject(a[i])) {
-            result = _.deepHasEqual(a[i], b, keys);
-          }
-        }
-      }
-      return !!result;
     },
 
     deepSearch: function(collection, values) {
