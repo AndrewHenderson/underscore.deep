@@ -122,7 +122,8 @@ var familyTree = {
 **Signature:** `_.deepFind(collection:Array|Object, predicate:Function|Object)`
 
 Recursively looks through each value in the `collection`, returning the first object that passes a truth test - `predicate`.
-*Note: `predicate` can also be a properties object.*
+
+**Note: `predicate` can also be a properties object.**
 
 You'd like to see all children between the ages of 13 and 30.
 
@@ -168,7 +169,8 @@ Result:
 **Signature:** `_.deepFilter(collection:Array|Object, predicate:Function|Object)`
 
 Recursively looks through each value in the `collection`, returning an array of all the objects that pass a truth test (`predicate`).
-*Note: `predicate` can also be a properties object.*
+
+**Note: `predicate` can also be a properties object.**
 
 Now you want to see all children with an empty children array.
 ```js
