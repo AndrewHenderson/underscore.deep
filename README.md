@@ -8,7 +8,7 @@ Let's say your data looks something like this:
 
 ```js
 var familyTree = {
-  name: "Charles",
+  name: "Michael",
   age: "deceased",
   children: [
     {
